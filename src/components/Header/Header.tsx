@@ -18,7 +18,7 @@ function Header(props: Props) {
         <div className={styles["logo-wrapper"]}>
           <img src={Logo.src} alt={"logo"} />
         </div>
-        <RedButton title="להרשמה" href="#lead-form" type="a" />
+        <RedButton text="להרשמה" href="#lead-form" type="a" />
       </div>
     </header>
   );
