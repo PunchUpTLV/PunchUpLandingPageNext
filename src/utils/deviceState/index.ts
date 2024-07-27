@@ -1,5 +1,5 @@
 import Store from "redux-store/index";
-import Actions from "redux-store/actions";
+import { setDeviceState } from "redux-store/features/deviceSlice";
 
 const DeviceState = (function () {
   const delay = 250;
@@ -16,7 +16,7 @@ const DeviceState = (function () {
 
   function setDevices() {
     const devices = getScreenBasedOnMediaQuery();
-    Store.dispatch(Actions.setDeviceState(devices));
+    Store.dispatch(setDeviceState(devices));
   }
 
   function debounce(callback: (args: void) => void, time: number) {

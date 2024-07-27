@@ -5,15 +5,15 @@ import { React } from "react";
 import LogoutIcon from "/public/assets/icons/logout.svg";
 import styles from "./LogoutButton.module.scss";
 import LOCAL_STORAGE_KEYS from "constants/LocalStorage";
-import { useDispatch } from "react-redux";
-import Actions from "redux-store/actions";
+import { resetTokens } from "redux-store/features/tokensSlice";
+import { useAppDispatch } from "utils/hooks/useRedux";
 
 function LogoutButton(props) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   function logout() {
     localStorage.removeItem(LOCAL_STORAGE_KEYS.REFRESH_TOKEN);
-    dispatch(Actions.resetTokens());
+    dispatch(resetTokens());
   }
 
   return (

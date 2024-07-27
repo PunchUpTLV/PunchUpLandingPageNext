@@ -1,43 +1,31 @@
 @import "settings";
+$colors: (
+  blue: $basic-color-blue,
+  red: $basic-color-red,
+  green: $basic-color-green,
+  yellow: $basic-color-yellow,
+  purple: $basic-color-purple,
+  pink: $basic-color-pink,
+  orange: $basic-color-orange,
+);
 
-.item {
-  &.blue {
-    background-color: $basic-color-blue;
+@each $name, $color in $colors {
+  .item.#{$name} {
+    background-color: $color;
   }
-  &.red {
-    background-color: $basic-color-red;
+  .light-item.#{$name} {
+    background-color: lighten($color, 30);
   }
-  &.green {
-    background-color: $basic-color-green;
+  .border.#{$name} {
+    border: 1px solid $color;
   }
-  &.yellow {
-    background-color: $basic-color-yellow;
+  .text.#{$name} {
+    color: $color;
   }
-  &.purple {
-    background-color: $basic-color-purple;
+  .icon.#{$name} {
+    @include recolor($color);
   }
-  &.pink {
-    background-color: $basic-color-pink;
-  }
-}
-
-.text {
-  &.blue {
-    color: $basic-color-blue;
-  }
-  &.red {
-    color: $basic-color-red;
-  }
-  &.green {
-    color: $basic-color-green;
-  }
-  &.yellow {
-    color: $basic-color-yellow;
-  }
-  &.purple {
-    color: $basic-color-purple;
-  }
-  &.pink {
-    color: $basic-color-pink;
+  .glass.#{$name} {
+    @include glass-effect($color);
   }
 }

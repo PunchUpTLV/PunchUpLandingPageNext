@@ -134,7 +134,7 @@ function RotatingTextInputs({ name, onChange, currentValue }: Props) {
           value={text}
           placeholder="טקטס קבוע"
         />
-        <CmsButton title="עדכון" onClick={updateValue} className="update" />
+        <CmsButton text="עדכון" onClick={updateValue} color="green" />
       </div>
       <div className={styles["row"]}>
         <TextInput
@@ -152,9 +152,9 @@ function RotatingTextInputs({ name, onChange, currentValue }: Props) {
         />
 
         <CmsButton
-          title="הוספה"
+          color="blue"
+          text="הוספה"
           onClick={addNewOption}
-          className="create"
           isDisabled={!newOption.color.value || !newOption.text.value}
         />
       </div>

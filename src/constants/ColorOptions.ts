@@ -29,6 +29,11 @@ const COLOR_OPTIONS = [
     _id: "pink",
     text: "ורוד",
   },
+  {
+    color: "orange",
+    _id: "orange",
+    text: "כתום",
+  },
 ];
 
 export default COLOR_OPTIONS;

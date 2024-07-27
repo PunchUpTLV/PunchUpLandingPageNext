@@ -19,19 +19,5 @@
     height: 100%;
     overflow: scroll;
     @include hideScrollbar();
-    .option {
-      display: flex;
-      align-items: center;
-      height: rem(40);
-
-      border-bottom: #d3d3d3;
-
-      .option-text {
-        font-size: rem(16);
-        .bold {
-          font-weight: 600;
-        }
-      }
-    }
   }
 }

@@ -10,7 +10,7 @@ function BasicPopup(props) {
   const { lottieName = "", title, message } = props.payload;
   function getAnimationByName() {}
   return (
-    <SlidePopup className={styles["basic-popup"]} extraStyles={styles}>
+    <SlidePopup className={styles["basic-popup"]}>
       {lottieName && (
         <div className={styles["lottie-animation"]}>
           <LottieAnimation animation={getAnimationByName()} />

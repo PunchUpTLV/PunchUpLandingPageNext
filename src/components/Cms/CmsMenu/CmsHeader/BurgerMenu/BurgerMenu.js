@@ -1,19 +1,18 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
 
-// import actions
-import Actions from "redux-store/actions";
 import styles from "./BurgerMenu.module.scss";
 
 import CmsSideBar from "components/Cms/CmsMenu/CmsSidebar/CmsSideBar";
 import LogoutButton from "components/Cms/CmsMenu/LogoutButton/LogoutButton";
+import { setBurger } from "redux-store/features/burgerStateSlice";
+import { useAppDispatch, useAppSelector } from "utils/hooks/useRedux";
 
 export default function BurgerMenu(props) {
-  const state = useSelector((store) => store.burgerState);
-  const dispatch = useDispatch();
+  const state = useAppSelector((store) => store.burgerState);
+  const dispatch = useAppDispatch();
 
   const handleCloseClick = () => {
-    dispatch(Actions.setBurger(false));
+    dispatch(setBurger(false));
   };
 
   return (

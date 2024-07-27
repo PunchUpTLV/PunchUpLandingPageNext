@@ -8,6 +8,7 @@ type Props = {
   onOptionClick: (item: any) => void;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  name: string;
 };
 
 function useHighlightedItem(props: Props) {
@@ -18,8 +19,10 @@ function useHighlightedItem(props: Props) {
     onOptionClick,
     isOpen,
     setIsOpen,
+    name,
   } = props;
   const [highlightedItem, setHighlightedItem] = useState(-1);
+
   const filteredOptions = useMemo(
     () => options.filter((o) => o[field].includes(query)),
     [options, query, field]

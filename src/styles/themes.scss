@@ -32,8 +32,8 @@
   }
 }
 .orange {
-  // --input-focus-color: #ff6d00;
-  // --input-background-color: #{lighten(#ff6d00, 45%)};
+  --input-focus-color: #ff6d00;
+  --input-background-color: #{lighten(#ff6d00, 45%)};
 
   --cms-main-color: #ff6d00;
 
@@ -41,11 +41,7 @@
   --cms-main-light-color: #{lighten(#ff6d00, 47%)};
   --cms-main-min-light-color: #{lighten(#ff6d00, 40%)};
 
-  // .input-icon-mark {
-  //   @include recolor(#ff6d00);
-  // }
-}
-
-.site {
-  --input-focus-color: black;
+  .input-icon-mark {
+    @include recolor(#ff6d00);
+  }
 }

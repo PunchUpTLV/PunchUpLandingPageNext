@@ -2,12 +2,11 @@
 
 import React, { ChangeEventHandler } from "react";
 
-import basic from "./UploadFileButton.module.scss";
-import { generateUniqueId } from "utils/functions";
+import styles from "./UploadFileButton.module.scss";
+import { clsx, generateUniqueId } from "utils/functions";
 import BasicInputErrrorMsg from "components/Basic/BasicInputErrrorMsg/BasicInputErrrorMsg";
 
 type Props = {
-  extraStyles?: any;
   accept?: string;
   onChange: ChangeEventHandler;
   placeholder: string;
@@ -17,13 +16,13 @@ type Props = {
   errorMessage?: string;
   id?: string;
   disabled?: boolean;
+  value?: File;
 };
 
 const defaultId = generateUniqueId(16);
 
 const UploadFileButton = (props: Props) => {
   const {
-    extraStyles = {},
     accept = "*",
     onChange = () => {},
     placeholder,
@@ -33,18 +32,15 @@ const UploadFileButton = (props: Props) => {
     showError = false,
     errorMessage = "",
     id = defaultId,
+    value,
   } = props;
-
-  function styles(className: string) {
-    return (basic[className] || "") + " " + (extraStyles[className] || "");
-  }
 
   function renderButton() {
     return (
       <>
         <input
           id={id}
-          className={styles("media-file")}
+          className={styles["media-file"]}
           type="file"
           accept={accept}
           onChange={onChange}
@@ -53,9 +49,10 @@ const UploadFileButton = (props: Props) => {
         />
         <label
           htmlFor={id}
-          className={`${styles("media-file-label")} ${
-            disabled ? styles("disabled") : ""
-          }`}
+          className={clsx(
+            styles["media-file-label"],
+            disabled ? styles["disabled"] : ""
+          )}
         >
           {placeholder}
         </label>
@@ -64,8 +61,9 @@ const UploadFileButton = (props: Props) => {
   }
 
   return (
-    <div className={`${styles("file-input-wrapper")}  ${className}`}>
+    <div className={clsx(styles["file-input-wrapper"], className)}>
       {renderButton()}
+      {value && <span className={styles["file-name-title"]}>{value.name}</span>}
       <BasicInputErrrorMsg showError={showError} errorMessage={errorMessage} />
     </div>
   );

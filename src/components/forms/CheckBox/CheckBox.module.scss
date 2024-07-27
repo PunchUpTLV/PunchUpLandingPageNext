@@ -1,5 +1,8 @@
 @import "src/styles/imports.scss";
 .checkbox-wrapper {
+  &.disabled {
+    @include input-disabled();
+  }
   input {
     display: none;
   }
@@ -10,23 +13,7 @@
     }
     .label {
       margin-inline-start: rem(5);
-      font-size: rem(14);
-      line-height: rem(14);
-    }
-  }
-}
-
-@media (min-width: em($tablet)) {
-  .checkbox-wrapper {
-    label {
-      .image-wrapper {
-        width: rem(17);
-      }
-      .label {
-        margin-inline-start: rem(5);
-        font-size: rem(14);
-        line-height: rem(14);
-      }
+      @include input-text();
     }
   }
 }
@@ -36,26 +23,6 @@
     label {
       .image-wrapper {
         width: rem(20);
-      }
-      .label {
-        margin-inline-start: rem(5);
-        font-size: rem(14);
-        line-height: rem(14);
-      }
-    }
-  }
-}
-
-@media (min-width: em($desktop_large)) {
-  .checkbox-wrapper {
-    label {
-      .image-wrapper {
-        width: rem(20);
-      }
-      .label {
-        margin-inline-start: rem(5);
-        font-size: rem(14);
-        line-height: rem(14);
       }
     }
   }

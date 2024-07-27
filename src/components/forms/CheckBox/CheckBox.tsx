@@ -2,19 +2,19 @@
 
 import React, { ChangeEventHandler } from "react";
 
-import basic from "./CheckBox.module.scss";
+import styles from "./CheckBox.module.scss";
 
-import CheckBoxEmpty from "/public/assets/icons/checkbox/checkbox.svg";
-import CheckBoxFull from "/public/assets/icons/checkbox/checkbox-selected.svg";
+import { clsx } from "utils/functions";
+import CheckboxImage from "components/CheckboxImage/CheckboxImage";
 
 type Props = {
-  extraStyles?: any;
   id: string;
   name: string;
   label?: string;
   value: boolean;
   onChange: ChangeEventHandler;
   className?: string;
+  disabled?: boolean;
 };
 
 function CheckBox(props: Props) {
@@ -25,19 +25,18 @@ function CheckBox(props: Props) {
     label = "",
     value = false,
     onChange,
-    extraStyles = {},
+
+    disabled = false,
   } = props;
 
-  const styles = (className: string) => {
-    return (basic[className] ?? "") + " " + (extraStyles[className] ?? "");
-  };
-
-  const image = value ? CheckBoxFull.src : CheckBoxEmpty.src;
   return (
     <div
-      className={`${styles("checkbox-wrapper")} ${
-        value ? styles("selecetd") : ""
-      } ${className}`}
+      className={clsx(
+        styles["checkbox-wrapper"],
+        value ? styles["selecetd"] : "",
+        className,
+        disabled ? styles["disabled"] : ""
+      )}
     >
       <input
         type={"checkbox"}
@@ -47,11 +46,9 @@ function CheckBox(props: Props) {
         onChange={onChange}
       />
       <label htmlFor={id}>
-        <div className={styles("image-wrapper")}>
-          <img src={image} />
-        </div>
+        <CheckboxImage isSelected={value} className={styles["image-wrapper"]} />
 
-        {label && <span className={styles("label")}>{label}</span>}
+        {label && <span className={styles["label"]}>{label}</span>}
       </label>
     </div>
   );

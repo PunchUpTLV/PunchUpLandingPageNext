@@ -47,7 +47,7 @@ function GeneralInfoPopup(props) {
     inputs: [
       {
         name: "name",
-        rules: ["not_empty", "generalInfoName"],
+        rules: ["not_empty", ["alphanumeric", 2]],
         label: "שם השדה (אנגלית בלבד)",
         inputType: FORM_INPUTS_TYPES.INPUT,
       },
@@ -67,7 +67,7 @@ function GeneralInfoPopup(props) {
       {
         name: "multiValues",
         rules: ["not_empty"],
-        label: "ערך מרובה (לא רלוונטי לטקטס מתחלף)",
+        label: "ערך מרובה (לא רלוונטי לטקסט מתחלף)",
         inputType: FORM_INPUTS_TYPES.RADIO,
         options: options,
         field: "text",

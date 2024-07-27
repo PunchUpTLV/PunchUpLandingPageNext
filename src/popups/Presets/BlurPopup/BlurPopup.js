@@ -5,12 +5,11 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useDispatch } from "react-redux";
 
-import Actions from "redux-store/actions";
-
-import basic from "./BlurPopup.module.scss";
+import styles from "./BlurPopup.module.scss";
 import XIcon from "/public/assets/icons/x-icon.svg";
+import { removePopup } from "redux-store/features/popupsSlice";
+import { useAppDispatch } from "utils/hooks/useRedux";
 
 const BlurPopupRef = (props, ref) => {
   const {
@@ -18,16 +17,11 @@ const BlurPopupRef = (props, ref) => {
     children,
     className = "",
     animateOutCallback = () => {},
-    extraStyles = {},
   } = props;
 
   const [animationClass, setAminationClass] = useState("");
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const modalRef = useRef();
-
-  function styles(className) {
-    return (basic[className] || "") + " " + (extraStyles[className] || "");
-  }
 
   useImperativeHandle(ref, () => ({
     animateOut,
@@ -56,33 +50,33 @@ const BlurPopupRef = (props, ref) => {
         callback();
       }
 
-      dispatch(Actions.removePopup());
+      dispatch(removePopup());
     }, 200);
   };
 
   return (
     <div
-      className={`backdrop ${styles("blur-popup")} ${className} ${styles(
+      className={`backdrop ${styles["blur-popup"]} ${className} ${styles(
         animationClass
       )} `}
       onClick={() => animateOut(animateOutCallback)}
       onTransitionEnd={completeAnimation}
     >
       <div
-        className={`${styles("popup_wrapper")} ${styles(animationClass)}`}
+        className={`${styles["popup_wrapper"]} ${styles(animationClass)}`}
         onClick={(e) => e.stopPropagation()}
         ref={modalRef}
       >
         {showCloseIcon && (
           <button
-            className={styles("close-icon-wrapper")}
+            className={styles["close-icon-wrapper"]}
             onClick={() => animateOut(animateOutCallback)}
           >
             <img src={XIcon.src}></img>
           </button>
         )}
 
-        {children && <div className={styles("popup_content")}>{children}</div>}
+        {children && <div className={styles["popup_content"]}>{children}</div>}
       </div>
     </div>
   );

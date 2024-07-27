@@ -1,19 +1,14 @@
 "use client";
 
-import React, {
-  ComponentType,
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from "react";
+import React, { ComponentType, forwardRef, useEffect, useState } from "react";
 
 import styles from "./FormCreator.module.scss";
 import InputsCreator from "./InputsCreator/InputsCreator";
 import CmsButton from "components/CmsButton/CmsButton";
-import { FormDataType } from "utils/types/form";
+import { FormDataType, FormInputData, onChangeValue } from "utils/types/form";
 import { copy } from "utils/functions";
 import useValidate from "utils/hooks/useValidate";
+import FORM_INPUTS_TYPES from "constants/form-inputs-types";
 
 type Props = {
   formData: FormDataType;
@@ -32,14 +27,23 @@ const FormCreator = forwardRef((props: Props, ref) => {
   const [form, setForm] = useState({});
   const validate = useValidate();
 
+  function defaultValue(input: FormInputData) {
+    switch (input.inputType) {
+      case FORM_INPUTS_TYPES.MULTI_SELECT_AUTO_COMPLETE:
+        return [];
+      default:
+        return "";
+    }
+  }
+
   useEffect(() => {
     const formData = {};
     if (Array.isArray(inputs)) {
       for (const key in inputs) {
         const input = inputs[key];
-        let initialValue = "";
-        if (initialData) {
-          initialValue = initialData[input.name] ?? "";
+        let initialValue = defaultValue(input);
+        if (initialData && initialData[input.name]) {
+          initialValue = initialData[input.name];
         }
 
         formData[input.name] = {
@@ -53,7 +57,7 @@ const FormCreator = forwardRef((props: Props, ref) => {
     setForm(formData);
   }, [initialData, inputs]);
 
-  function onChange(name: string, value: string) {
+  function onChange(name: string, value: onChangeValue) {
     const newState = copy(form);
 
     const { valid, msg } = validate(value, form[name].rules);
@@ -113,15 +117,13 @@ const FormCreator = forwardRef((props: Props, ref) => {
         return null;
       })}
       {children && children}
-      {CustomButton ? (
-        <CustomButton title={buttonText} onClick={onSubmitHandler} />
-      ) : (
-        <CmsButton
-          title={buttonText}
-          className={"create"}
-          onClick={onSubmitHandler}
-        />
-      )}
+      <div className={styles["actions"]}>
+        {CustomButton ? (
+          <CustomButton text={buttonText} onClick={onSubmitHandler} />
+        ) : (
+          <CmsButton text={buttonText} onClick={onSubmitHandler} />
+        )}
+      </div>
     </div>
   );
 });

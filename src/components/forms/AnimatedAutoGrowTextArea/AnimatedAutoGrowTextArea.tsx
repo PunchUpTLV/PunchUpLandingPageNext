@@ -3,6 +3,8 @@ import React, { ChangeEventHandler, useState } from "react";
 import styles from "./AnimatedAutoGrowTextArea.module.scss";
 import AutoGrowTextArea from "../AutoGrowTextArea/AutoGrowTextArea";
 import AnimatedPlaceholder from "components/Basic/AnimatedPlaceholder/AnimatedPlaceholder";
+import { generateUniqueId } from "utils/functions";
+import useInputAccessibility from "utils/hooks/useInputAccessibility";
 
 type Props = {
   value: string | number;
@@ -19,13 +21,17 @@ type Props = {
 
   showError?: boolean;
   errorMessage?: string;
+  ariaLabel?: string;
+  required?: boolean;
 };
+
+const defaultId = generateUniqueId(16);
 
 function AnimatedAutoGrowTextArea(props: Props) {
   const {
     value,
     onChange,
-    id = "",
+    id = defaultId,
     name = "",
     placeholder = "",
     disabled = false,
@@ -34,7 +40,16 @@ function AnimatedAutoGrowTextArea(props: Props) {
     className = "",
     showError = false,
     errorMessage = "",
+    ariaLabel = "",
+    required = false,
   } = props;
+  const accessibilityProps = useInputAccessibility({
+    ariaLabel,
+    showError,
+    required,
+    placeholder,
+    name,
+  });
 
   const [isFocus, setIsFocus] = useState(false);
 
@@ -61,6 +76,7 @@ function AnimatedAutoGrowTextArea(props: Props) {
         showError={showError}
         errorMessage={errorMessage}
         disabled={disabled}
+        {...accessibilityProps}
       />
       <AnimatedPlaceholder
         id={id}

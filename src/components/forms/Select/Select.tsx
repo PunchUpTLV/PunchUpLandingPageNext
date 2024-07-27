@@ -2,15 +2,15 @@
 
 import React, { KeyboardEvent, useRef, useState } from "react";
 
-import basic from "./Select.module.scss";
+import styles from "./Select.module.scss";
 import OptionsList from "components/Basic/OptionsList/OptionsList";
 import BasicInputErrrorMsg from "components/Basic/BasicInputErrrorMsg/BasicInputErrrorMsg";
 import { useOutsideClick } from "utils/hooks/useOutsideClick";
 import { GeneralOptionItem } from "utils/types/inputs";
 import useHighlightedItem from "utils/hooks/useHighlightedItem";
+import { clsx } from "utils/functions";
 
 type Props = {
-  extraStyles?: any;
   options: Array<any>;
   showError?: boolean;
   errorMessage?: string;
@@ -26,7 +26,6 @@ type Props = {
 
 function Select(props: Props) {
   const {
-    extraStyles = {},
     options = [],
     showError = false,
     errorMessage = "",
@@ -50,11 +49,8 @@ function Select(props: Props) {
     onOptionClick,
     isOpen,
     setIsOpen,
+    name,
   });
-
-  function styles(className: string) {
-    return (basic[className] || "") + " " + (extraStyles[className] || "");
-  }
 
   const wrapperRef = useRef(null);
   useOutsideClick(wrapperRef, closeList);
@@ -69,22 +65,19 @@ function Select(props: Props) {
   }
 
   return (
-    <div
-      className={`${styles("select-wrapper")} ${className}`}
-      ref={wrapperRef}
-    >
+    <div className={clsx(styles["select-wrapper"], className)} ref={wrapperRef}>
       <button
-        className={`${styles("button-select")} ${
-          disabled ? styles("disabled") : ""
+        className={`${styles["button-select"]} ${
+          disabled ? styles["disabled"] : ""
         }`}
         disabled={disabled}
         onClick={() => setIsOpen((prevState) => !prevState)}
         onKeyDown={handleKeyDown}
       >
         {value ? (
-          <span className={styles("select-text")}>{foundItem[field]}</span>
+          <span className={styles["select-text"]}>{foundItem[field]}</span>
         ) : (
-          <span className={styles("placeholder")}>{placeholder}</span>
+          <span className={styles["placeholder"]}>{placeholder}</span>
         )}
       </button>
 

@@ -1,20 +1,23 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 import ErrorNotification from "./components/ErrorNotification/ErrorNotification";
 import WarnNotification from "./components/WarnNotification/WarnNotification";
 import SuccessNotification from "./components/SuccessNotification/SuccessNotification";
 import InfoNotification from "./components/InfoNotification/InfoNotification";
 
-import Actions from "redux-store/actions";
 import NotificationsTypes from "constants/NotificationsTypes";
 
 import CloseIcon from "/public/assets/icons/close-icon.svg";
-import basic from "./notifications.module.scss";
+import styles from "./notifications.module.scss";
+import { clsx } from "utils/functions";
+import { removeNotification } from "redux-store/features/notificationsSlice";
+import { useAppDispatch, useAppSelector } from "utils/hooks/useRedux";
 
 function Notifications(props) {
-  const notificationsArray = useSelector((store) => store.notificationsArray);
+  const notificationsArray = useAppSelector(
+    (store) => store.notificationsArray
+  );
 
   function getNotificationByType(notification) {
     const { type, payload } = notification;
@@ -50,7 +53,7 @@ function Notifications(props) {
   };
 
   return (
-    <div className={basic["notifications-container"]}>
+    <div className={styles["notifications-container"]}>
       {renderNotifications()}
     </div>
   );
@@ -66,15 +69,11 @@ export function Notification(props) {
     icon,
     timer = 2000,
     className = "",
-    extraStyles = {},
+    color = "green",
   } = props;
 
   const [animationClass, setAminationClass] = useState("");
-  const dispatch = useDispatch();
-
-  function styles(className) {
-    return (basic[className] || "") + " " + (extraStyles[className] || "");
-  }
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     animateIn();
@@ -94,7 +93,7 @@ export function Notification(props) {
     }
 
     if (animationClass === "exit") {
-      dispatch(Actions.removeNotification(id));
+      dispatch(removeNotification(id));
     }
   }
 
@@ -112,25 +111,31 @@ export function Notification(props) {
 
   return (
     <div
-      className={`${styles("notification-wrapper")} ${styles(
-        animationClass
-      )}  ${className}`}
+      className={clsx(
+        styles["notification-wrapper"],
+        styles[animationClass],
+        className
+      )}
       onTransitionEnd={completeAnimation}
     >
-      <div className={styles("continer")}>
-        <div className={styles("close-icon")} onClick={animateOut}>
+      <div className={clsx(styles["continer"], "glass", color)}>
+        <div
+          className={clsx(styles["close-icon"], "icon", "white")}
+          onClick={animateOut}
+        >
           <img src={CloseIcon.src} alt={"close"} />
         </div>
 
         {icon && (
-          <div className={styles("icon-wrapper")}>
+          <div className={clsx(styles["icon-wrapper"], "icon", color)}>
             <img src={icon} alt={"notification-icon"} />
           </div>
         )}
-        <div className={styles("text-wrapper")}>
-          {title && <span className={styles("title")}>{title}</span>}
-          {text && <span className={styles("text")}>{text}</span>}
+        <div className={styles["text-wrapper"]}>
+          {title && <span className={styles["title"]}>{title}</span>}
+          {text && <span className={styles["text"]}>{text}</span>}
         </div>
+        <div className={styles["divider"]} />
       </div>
     </div>
   );

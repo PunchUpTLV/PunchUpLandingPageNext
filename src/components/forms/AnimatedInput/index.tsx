@@ -1,10 +1,12 @@
 import React, { ChangeEventHandler, useState } from "react";
 
-import basic from "./index.module.scss";
+import styles from "./index.module.scss";
 import BasicInput from "components/Basic/BasicInput/BasicInput";
 
 import BasicInputErrrorMsg from "components/Basic/BasicInputErrrorMsg/BasicInputErrrorMsg";
 import AnimatedPlaceholder from "components/Basic/AnimatedPlaceholder/AnimatedPlaceholder";
+import useInputAccessibility from "utils/hooks/useInputAccessibility";
+import { clsx, generateUniqueId } from "utils/functions";
 type Props = {
   value: string | number;
   onChange: ChangeEventHandler;
@@ -15,17 +17,21 @@ type Props = {
   disabled?: boolean;
   showError?: boolean;
   errorMessage?: string;
-  extraStyles?: Object;
+
   onFocus?: () => void;
   onBlur?: () => void;
   type?: string;
+  ariaLabel?: string;
+  required?: boolean;
 };
+
+const defaultId = generateUniqueId(16);
 
 function AnimatedInput(props: Props) {
   const {
     value,
     onChange,
-    id = "",
+    id = defaultId,
     name = "",
     className = "",
     placeholder = "",
@@ -33,16 +39,22 @@ function AnimatedInput(props: Props) {
     disabled = false,
     showError = false,
     errorMessage = "",
-    extraStyles = {},
+
     onFocus = () => {},
     onBlur = () => {},
+    ariaLabel = "",
+    required = false,
   } = props;
 
-  const [isFocus, setIsFocus] = useState(false);
+  const accessibilityProps = useInputAccessibility({
+    ariaLabel,
+    showError,
+    required,
+    placeholder,
+    name,
+  });
 
-  function styles(className: string) {
-    return (basic[className] || "") + " " + (extraStyles[className] || "");
-  }
+  const [isFocus, setIsFocus] = useState(false);
 
   function onFocusHandler() {
     setIsFocus(true);
@@ -57,7 +69,7 @@ function AnimatedInput(props: Props) {
 
   return (
     // Input wrapper
-    <div className={`${styles("animated-input-wrapper")} ${className}`}>
+    <div className={clsx(styles["animated-input-wrapper"], className)}>
       <BasicInput
         value={value}
         onChange={onChange}
@@ -67,6 +79,7 @@ function AnimatedInput(props: Props) {
         disabled={disabled}
         onFocus={onFocusHandler}
         onBlur={onBlurHandler}
+        {...accessibilityProps}
       />
 
       <AnimatedPlaceholder

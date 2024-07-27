@@ -1,18 +1,18 @@
 import Api from "api/requests";
 import CmsButton from "components/CmsButton/CmsButton";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 
 import styles from "./Languages.module.scss";
 import TableCreator from "components/TableCreator/TableCreator";
 import TABLE_CELL_TYPES from "constants/TableCellType";
 import TABLE_COLORS from "constants/TableColors";
 import useNotificationsHandler from "utils/hooks/useNotificationsHandler";
+import { useAppSelector } from "utils/hooks/useRedux";
 
 export default function Languages(props) {
   const { onSuccessNotification } = useNotificationsHandler();
 
-  const languages = useSelector((store) => store.init?.languages);
+  const languages = useAppSelector((store) => store.init?.languages);
   const [form, setForm] = useState({
     langId: "",
     langName: "",
@@ -27,7 +27,7 @@ export default function Languages(props) {
       newState.langName = "";
       setForm(newState);
     }
-    const payload = { lang_id: form.langId, lang: form.langName };
+    const payload = { langId: form.langId, lang: form.langName };
     Api.upsertLanguage({ payload, onSuccess });
   }
 
@@ -40,7 +40,7 @@ export default function Languages(props) {
   }
 
   function onDelete(item) {
-    const payload = { lang_id: item._id };
+    const payload = { langId: item._id };
     Api.deleteLanguage({ payload });
   }
 
@@ -49,7 +49,7 @@ export default function Languages(props) {
     const langInput = tableInputs[langId];
 
     if (langInput) {
-      const payload = { lang_id: langId, lang: langInput };
+      const payload = { langId: langId, lang: langInput };
       Api.upsertLanguage({ payload, onSuccess: onSuccessNotification });
     }
   }
@@ -117,12 +117,7 @@ export default function Languages(props) {
             />
           </div>
           <div className={styles["button-wrapper"]}>
-            <CmsButton
-              title={"הוסף"}
-              className="create"
-              onClick={addNewLanguage}
-              extraStyles={styles}
-            />
+            <CmsButton text={"הוסף"} onClick={addNewLanguage} color="blue" />
           </div>
         </div>
       </div>

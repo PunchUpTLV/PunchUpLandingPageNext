@@ -17,7 +17,6 @@ import { FormDataType } from "utils/types/form";
 import FORM_INPUTS_TYPES from "constants/form-inputs-types";
 import Api from "api/requests";
 import useNotificationsHandler from "utils/hooks/useNotificationsHandler";
-import Scrollbar from "components/ScrollBar/Scrollbar";
 
 function MetaTagsPopup(props) {
   const { payload = {} } = props;
@@ -56,7 +55,7 @@ function MetaTagsPopup(props) {
   function setField(id: string, field: string, value: string) {
     const itemsArray: Array<MetaTagRow> = copy(fields);
 
-    const index = itemsArray.findIndex((i: MetaTagRow) => i.meta_tag_id === id);
+    const index = itemsArray.findIndex((i: MetaTagRow) => i.metaTagId === id);
 
     if (index > -1) {
       itemsArray[index] = { ...itemsArray[index], [field]: value };
@@ -73,14 +72,14 @@ function MetaTagsPopup(props) {
   }
   function removeById(id: string) {
     setFields((prevState) =>
-      prevState.filter((i: MetaTagRow) => i.meta_tag_id !== id)
+      prevState.filter((i: MetaTagRow) => i.metaTagId !== id)
     );
   }
 
   function addNewMeta() {
     const itemsArray: Array<MetaTagRow> = copy(fields);
     itemsArray.push({
-      meta_tag_id: generateUniqueId(16),
+      metaTagId: generateUniqueId(16),
       type: "",
       value: "",
     });
@@ -97,7 +96,7 @@ function MetaTagsPopup(props) {
         isDisabled: !!id,
       },
       {
-        name: "lang_id",
+        name: "langId",
         label: "שפה",
         inputType: FORM_INPUTS_TYPES.SELECT,
         rules: ["not_empty"],
@@ -116,33 +115,31 @@ function MetaTagsPopup(props) {
   return (
     <SlidePopup ref={ref} className={styles["meta-tags-popup"]}>
       <div className={styles["content"]}>
-        <Scrollbar>
-          <FormCreator
-            formData={formData}
-            onSubmit={onSubmit}
-            buttonText={id ? "עדכון" : "יצירה"}
-          >
-            {fields.map((item: MetaTagRow) => {
-              return (
-                <MetaTagsInputsSelect
-                  key={"inputs" + item.meta_tag_id}
-                  id={item.meta_tag_id}
-                  setFieldType={setFieldType}
-                  setFieldValue={setFieldValue}
-                  remove={removeById}
-                  valueArray={fields}
-                />
-              );
-            })}
-            <div className={styles["actions"]}>
-              <CmsButton
-                title={"הוספת תגית חדשה"}
-                onClick={addNewMeta}
-                className="create"
+        <FormCreator
+          formData={formData}
+          onSubmit={onSubmit}
+          buttonText={id ? "עדכון" : "יצירה"}
+        >
+          {fields.map((item: MetaTagRow) => {
+            return (
+              <MetaTagsInputsSelect
+                key={"inputs" + item.metaTagId}
+                id={item.metaTagId}
+                setFieldType={setFieldType}
+                setFieldValue={setFieldValue}
+                remove={removeById}
+                valueArray={fields}
               />
-            </div>
-          </FormCreator>
-        </Scrollbar>
+            );
+          })}
+          <div className={styles["actions"]}>
+            <CmsButton
+              text={"הוספת תגית חדשה"}
+              onClick={addNewMeta}
+              color="blue"
+            />
+          </div>
+        </FormCreator>
       </div>
     </SlidePopup>
   );

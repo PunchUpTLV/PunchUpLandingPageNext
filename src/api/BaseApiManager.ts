@@ -1,6 +1,6 @@
-import Actions from "redux-store/actions";
-import store from "../redux-store/index";
 import POPUP_TYPES from "constants/popup-types";
+import Store from "redux-store";
+import { addPopup } from "redux-store/features/popupsSlice";
 
 const BaseApiManager = (function () {
   const api = {
@@ -9,7 +9,10 @@ const BaseApiManager = (function () {
     api: process.env.NEXT_PUBLIC_API,
   };
 
-  function buildeUrl(methodName: string) {
+  function buildeUrl(methodName: string, overrideUrl?: string) {
+    if (overrideUrl) {
+      return overrideUrl + "/" + methodName;
+    }
     return api.baseUrl + "/" + api.api + "/" + api.version + "/" + methodName;
   }
 
@@ -17,18 +20,9 @@ const BaseApiManager = (function () {
     return { "Content-Type": "application/json; charset=UTF-8" };
   }
 
-  function onReject(response: string) {
-    store.dispatch(
-      Actions.addPopup({
-        type: POPUP_TYPES.API_ERROR,
-        payload: { text: response },
-      })
-    );
-  }
-
   function onFailure(response: string) {
-    store.dispatch(
-      Actions.addPopup({
+    Store.dispatch(
+      addPopup({
         type: POPUP_TYPES.API_ERROR,
         payload: { text: response },
       })
@@ -39,7 +33,7 @@ const BaseApiManager = (function () {
   return {
     buildeUrl,
     getHeaders,
-    onReject,
+
     onFailure,
     onSuccess,
   };

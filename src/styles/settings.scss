@@ -7,7 +7,8 @@ $text-color: #000000;
 $grey-divider: #e7e8e4;
 $dark-grey: #565555;
 $text-black: #0c0803;
-$grey: #9fa0a4;
+$mid-dark-grey: #707173;
+$grey: #595959;
 
 $cmsRed: #d63646;
 $cmsBlue: #0f476f;
@@ -24,10 +25,15 @@ $basic-color-red: $appleRed;
 $basic-color-green: #50c778;
 $basic-color-yellow: #e7c704;
 $basic-color-purple: #8963c6;
+$basic-color-orange: #ea580b;
 $basic-color-pink: #fc93e8;
 
-$main-red: #fb0301;
-$background: #e8e9eb;
+$button-color-default: #341be6;
+$button-color-success: #16a349;
+$button-color-info: #0084c7;
+$button-color-warning: #ea580b;
+$button-color-help: #9333e9;
+$button-color-danger: #dc2625;
 
 /* fonts */
 $font: "Heebo-Regular";
@@ -75,3 +81,9 @@ $input-focus-color: var(--input-focus-color);
 $input-background-color: var(--input-background-color);
 
 /************* end *************/
+
+$menu-item-blue-color: #7cb9e8;
+$button-color-default: darken(#7cb9e8, 20);
+
+$main-red: #fb0301;
+$background: #e8e9eb;

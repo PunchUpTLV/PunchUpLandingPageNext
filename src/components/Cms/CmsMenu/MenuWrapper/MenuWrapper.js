@@ -1,7 +1,6 @@
 "use client";
 
 import { React, useEffect } from "react";
-import { useSelector } from "react-redux";
 
 import SideBarMenu from "components/Cms/CmsMenu/SideBarMenuCms/SideBarMenu";
 import CMSHeader from "components/Cms/CmsMenu/CmsHeader/cmsheader";
@@ -11,19 +10,20 @@ import styles from "./MenuWrapper.module.scss";
 import BurgerMenu from "../CmsHeader/BurgerMenu/BurgerMenu";
 import { useRouter } from "next/navigation";
 import { Routes } from "constants/routes";
+import { useAppSelector } from "utils/hooks/useRedux";
 
 function MenuWrapper(props) {
   const { children } = props;
-  const deviceState = useSelector((store) => store.deviceState);
-  const isBurgerOpen = useSelector((store) => store.burgerState);
-  const userData = useSelector((store) => store.userData);
+  const deviceState = useAppSelector((store) => store.deviceState);
+  const isBurgerOpen = useAppSelector((store) => store.burgerState);
+  const userData = useAppSelector((store) => store.userData);
   const router = useRouter();
-  const tokens = useSelector((store) => store.tokens);
+  const tokens = useAppSelector((store) => store.tokens);
   useEffect(() => {
-    if (userData) {
-      Api.Init();
+    if (userData && Object.keys(userData).length) {
+      Api.initCms();
     }
-  }, []);
+  }, [userData]);
 
   useEffect(() => {
     if (!tokens?.accessToken) {

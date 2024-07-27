@@ -13,7 +13,7 @@ function ApiErrorPopup(props) {
   const { title = "שגיאת שרת", text = "מצטערים, יש שגיאה בשרת" } = payload;
 
   return (
-    <SlidePopup className={styles["api-error-popup"]} extraStyles={styles}>
+    <SlidePopup className={styles["api-error-popup"]}>
       <div className={styles["api-error-wrapper"]}>
         <div className={styles["error-animation-wrapper"]}>
           <LottieAnimation animation={ErrorAnimation} autoplay loop />

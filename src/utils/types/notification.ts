@@ -1,5 +1,5 @@
 export type notificationPayload = {
-  id: string;
+  id?: string;
   title?: string;
   text?: string;
   timer?: number;
