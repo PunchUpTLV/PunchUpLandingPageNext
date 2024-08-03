@@ -1,9 +1,9 @@
 import Text from "components/Text/Text";
 import React from "react";
-import { AppTextType } from "utils/types/init";
+import { TextType } from "utils/types/initApp";
 
 type Props = {
-  value: AppTextType;
+  value: TextType;
   className?: string;
 };
 

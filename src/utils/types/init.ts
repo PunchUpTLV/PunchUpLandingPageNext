@@ -68,10 +68,6 @@ export type CmsText = {
 type TextValue = {
   [key: string]: string;
 };
-export type AppTextType = {
-  tag: TextTagsKeys;
-  text: string;
-};
 
 export type TextTagsKeys = keyof typeof TEXT_TAGS;
 

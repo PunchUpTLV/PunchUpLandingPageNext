@@ -119,7 +119,11 @@ const FormCreator = forwardRef((props: Props, ref) => {
       {children && children}
       <div className={styles["actions"]}>
         {CustomButton ? (
-          <CustomButton text={buttonText} onClick={onSubmitHandler} />
+          <CustomButton
+            text={buttonText}
+            textKey={buttonText}
+            onClick={onSubmitHandler}
+          />
         ) : (
           <CmsButton text={buttonText} onClick={onSubmitHandler} />
         )}

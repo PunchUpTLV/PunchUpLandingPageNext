@@ -7,10 +7,13 @@ import { FormDataType } from "utils/types/form";
 import FORM_INPUTS_TYPES from "constants/form-inputs-types";
 import FormCreator from "components/FormCreator/FormCreator";
 import RedButton from "components/RedButton/RedButton";
+import AppText from "components/AppText/AppText";
+import useTranslate from "utils/hooks/useTranslate";
 
 type Props = {};
 
 function Form(props: Props) {
+  const translate = useTranslate();
   const formData: FormDataType = {
     inputs: [
       {
@@ -34,13 +37,17 @@ function Form(props: Props) {
   return (
     <section id="lead-form" className={styles["form-wrapper"]}>
       <div className={styles["form-content"]}>
-        <h3 className={styles["title"]}>השארת פרטים</h3>
-        <h6 className={styles["subtitle"]}>תשאירו פרטים ונציג יחזור אליכם</h6>
+        <AppText className={styles["title"]} value={translate("form_title")} />
+        <AppText
+          className={styles["subtitle"]}
+          value={translate("form_subtitle")}
+        />
+
         <div className={styles["form"]}>
           <FormCreator
             formData={formData}
             onSubmit={onSubmit}
-            buttonText="שליחה"
+            buttonText={"form_btn_text"}
             CustomButton={RedButton}
           />
         </div>
