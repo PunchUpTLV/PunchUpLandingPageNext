@@ -24,7 +24,7 @@ const ApiManager = (function () {
     methodName: string,
     config?: apiConfig
   ) {
-    const url = BaseApiManager.buildeUrl(methodName, config?.url);
+    const url = BaseApiManager.buildUrl(methodName, config?.url);
     const defaultHeaders = BaseApiManager.getHeaders();
     const allHeaders = { ...headers, ...defaultHeaders };
 

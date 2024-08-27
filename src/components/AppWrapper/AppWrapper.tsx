@@ -4,10 +4,15 @@ import ScreenLoader from "components/ScreenLoader/ScreenLoader";
 import Popups from "popups/popup";
 import React from "react";
 
-function AppWrapper({ children, color = "site", data = undefined }) {
+function AppWrapper({
+  children,
+  color = "site",
+  data = undefined,
+  apiValidationData,
+}) {
   return (
     <body className={color}>
-      <StoreProvider data={data}>
+      <StoreProvider data={data} apiValidationData={apiValidationData}>
         {children}
 
         <Notifications />

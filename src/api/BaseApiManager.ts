@@ -1,19 +1,19 @@
 import POPUP_TYPES from "constants/popup-types";
 import Store from "redux-store";
 import { addPopup } from "redux-store/features/popupsSlice";
+import ApiValidationService from "services/ApiValidationService";
 
 const BaseApiManager = (function () {
-  const api = {
-    baseUrl: process.env.NEXT_PUBLIC_HOST,
-    version: process.env.NEXT_PUBLIC_API_VERSION,
-    api: process.env.NEXT_PUBLIC_API,
-  };
-
-  function buildeUrl(methodName: string, overrideUrl?: string) {
+  function buildUrl(methodName: string, overrideUrl?: string) {
     if (overrideUrl) {
       return overrideUrl + "/" + methodName;
     }
-    return api.baseUrl + "/" + api.api + "/" + api.version + "/" + methodName;
+
+    const api = ApiValidationService.getApiData();
+
+    return (
+      api.baseUrl + "/" + api.platform + "/" + api.version + "/" + methodName
+    );
   }
 
   function getHeaders() {
@@ -31,7 +31,7 @@ const BaseApiManager = (function () {
 
   function onSuccess() {}
   return {
-    buildeUrl,
+    buildUrl,
     getHeaders,
 
     onFailure,

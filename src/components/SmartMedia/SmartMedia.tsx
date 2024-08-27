@@ -5,6 +5,7 @@ import * as process from "process";
 import { Media, MediaTypes, MimeTypes, Src } from "utils/types/media";
 import BaseImage from "components/BaseVideoImage/BaseImage";
 import BaseVideo from "components/BaseVideoImage/BaseVideo";
+import ApiValidationService from "services/ApiValidationService";
 
 type Props = {
   className?: string;
@@ -18,7 +19,7 @@ type Props = {
 };
 
 export function getMediaPath(src: string): string {
-  return `${process.env["NEXT_PUBLIC_MEDIA_URL"]}${src}`;
+  return `${ApiValidationService.getCdn()}/${src}`;
 }
 
 const SmartMedia = ({

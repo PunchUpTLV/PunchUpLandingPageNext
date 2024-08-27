@@ -4,16 +4,11 @@ import ApiServer from "api/requests/server";
 import { NextIntlClientProvider } from "next-intl";
 import { unstable_setRequestLocale } from "next-intl/server";
 import { LOACLES } from "constants/GlobalParams";
+import ISR from "utils/ISR";
+import { ValidationResponseType } from "utils/types/vaildation";
 
 export function generateStaticParams() {
   return LOACLES.map((locale) => ({ locale }));
-}
-async function init(lang = "he") {
-  const payload = { lang };
-  const res = await ApiServer.init({ payload });
-  const json = await res.json();
-
-  return json;
 }
 
 export default async function LocaleLayout({
@@ -25,11 +20,13 @@ export default async function LocaleLayout({
 }) {
   unstable_setRequestLocale(locale);
 
-  const json = await init(locale);
-  const body = json.body;
+  const apiValidationData: ValidationResponseType =
+    await ISR.serverValidation();
+
+  const body = await ISR.init(locale);
 
   return (
-    <AppWrapper color="site" data={body}>
+    <AppWrapper color="site" data={body} apiValidationData={apiValidationData}>
       <NextIntlClientProvider>{children}</NextIntlClientProvider>
     </AppWrapper>
   );
