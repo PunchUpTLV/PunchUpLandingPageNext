@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 
 import styles from "./EditGeneralInfoPopup.module.scss";
 import SlidePopup from "popups/Presets/SlidePopup/SlidePopup";
-import TextInput from "components/forms/TextInput/TextInput";
-import { inputEvent } from "utils/types/inputs";
-import CmsButton from "components/CmsButton/CmsButton";
-import Api from "api/requests";
+
 import useGeneralInfo from "utils/hooks/useGeneralInfo";
 import { SlidePopupRef } from "utils/types/popup";
+import { FormDataType } from "utils/types/form";
+import FORM_INPUTS_TYPES from "constants/form-inputs-types";
+import FormCreator from "components/FormCreator/FormCreator";
 
 type Props = {
   payload: Payload;
@@ -21,36 +21,34 @@ type Payload = {
 function EditGeneralInfoPopup({ payload }: Props) {
   const { name } = payload;
   const ref = useRef<SlidePopupRef>();
-  const [currentValue, setCurrentValue] = useState("");
 
   const { value, cmsTitle, upsertGeneralInfo } = useGeneralInfo(name);
 
-  useEffect(() => {
-    setCurrentValue(cmsTitle);
-  }, [value]);
-
   const animateOut = () => ref.current?.animateOut();
 
-  function onChange(e: inputEvent) {
-    setCurrentValue(e.target.value);
+  function onSubmit(payload) {
+    upsertGeneralInfo(value, animateOut, payload["title"]);
   }
 
-  function updateGeneralParam() {
-    upsertGeneralInfo(value, animateOut, currentValue);
-  }
+  const formData: FormDataType = {
+    inputs: [
+      {
+        name: "title",
+        label: "כותרת",
+        inputType: FORM_INPUTS_TYPES.INPUT,
+        rules: ["not_empty"],
+      },
+    ],
+    initialData: { title: cmsTitle },
+  };
 
   return (
-    <SlidePopup
-      className={styles["edit-general-params-popup"]}
-      ref={ref}
-      extraStyles={styles}
-    >
+    <SlidePopup className={styles["edit-general-params-popup"]} ref={ref}>
       <div className={styles["content"]}>
-        <TextInput onChange={onChange} value={currentValue} />
-        <CmsButton
-          className={"update"}
-          title="עדכן"
-          onClick={updateGeneralParam}
+        <FormCreator
+          formData={formData}
+          buttonText={"עדכן"}
+          onSubmit={onSubmit}
         />
       </div>
     </SlidePopup>

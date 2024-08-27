@@ -1,10 +1,10 @@
 import React from "react";
 
-import basic from "./OptionsList.module.scss";
+import styles from "./OptionsList.module.scss";
 import SelectOption from "../SelectOption/SelectOption";
+import { clsx } from "utils/functions";
 
 type Props = {
-  extraStyles?: any;
   options: Array<any>;
   field: string;
   query?: string;
@@ -16,7 +16,6 @@ type Props = {
 
 function OptionsList(props: Props) {
   const {
-    extraStyles = {},
     options = [],
     query = "",
     field = "",
@@ -26,17 +25,14 @@ function OptionsList(props: Props) {
     highlightedItem = -1,
   } = props;
 
-  function styles(className: string) {
-    return (basic[className] || "") + " " + (extraStyles[className] || "");
-  }
-
   return (
     <div
-      className={`${styles("options-wrapper")} ${
-        isOpen ? styles("active") : ""
-      }`}
+      className={clsx(
+        styles["options-wrapper"],
+        isOpen ? styles["active"] : ""
+      )}
     >
-      <div className={styles("options-list")}>
+      <div className={styles["options-list"]}>
         {options.map((item, index) => {
           return (
             <SelectOption

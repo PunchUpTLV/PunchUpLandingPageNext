@@ -2,7 +2,7 @@
 
 import React, { ChangeEventHandler } from "react";
 
-import basic from "./RadioButtons.module.scss";
+import styles from "./RadioButtons.module.scss";
 import RadioButton from "components/Basic/RadioButton/RadioButton";
 import BasicInputErrrorMsg from "components/Basic/BasicInputErrrorMsg/BasicInputErrrorMsg";
 
@@ -11,7 +11,6 @@ type radioOption = {
 };
 
 type Props = {
-  extraStyles?: any;
   name: string;
   options: Array<radioOption>;
   disabled?: boolean;
@@ -25,7 +24,6 @@ type Props = {
 
 function RadioButtons(props: Props) {
   const {
-    extraStyles = {},
     options = [],
     name,
     onChange,
@@ -37,14 +35,10 @@ function RadioButtons(props: Props) {
     field = "text",
   } = props;
 
-  function styles(className: string) {
-    return (basic[className] || "") + " " + (extraStyles[className] || "");
-  }
-
   return (
-    <div className={styles("radio-buttons-wrapper")}>
-      {placeholder && <span className={styles("title")}>{placeholder}</span>}
-      <div className={styles("inputs")}>
+    <div className={styles["radio-buttons-wrapper"]}>
+      {placeholder && <span className={styles["title"]}>{placeholder}</span>}
+      <div className={styles["inputs"]}>
         {options.map((option) => {
           return (
             <RadioButton

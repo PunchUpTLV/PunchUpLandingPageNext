@@ -15,7 +15,7 @@ function MenuItem(props) {
       activeClassName={styles["active"]}
       menus={item.menus}
     >
-      <span className={styles["sidebar-menu-link-text"]}>{item.text}</span>
+      <span className={styles["sidebar-menu-link-text"]}>{item.title}</span>
     </ActiveLinkMenus>
   );
 }

@@ -1,31 +1,36 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import * as process from "process";
 import { Media, MediaTypes, MimeTypes, Src } from "utils/types/media";
+import BaseImage from "components/BaseVideoImage/BaseImage";
+import BaseVideo from "components/BaseVideoImage/BaseVideo";
+import ApiValidationService from "services/ApiValidationService";
 
 type Props = {
-  className: string;
+  className?: string;
   item: Media;
   controls?: boolean;
   autoPlay?: boolean;
   muted?: boolean;
   loop?: boolean;
   playsInline?: boolean;
+  skeletonClassName?: string;
 };
 
 export function getMediaPath(src: string): string {
-  return `${process.env["NEXT_PUBLIC_MEDIA_URL"]}${src}`;
+  return `${ApiValidationService.getCdn()}/${src}`;
 }
 
 const SmartMedia = ({
-  className,
+  className = "",
   item,
   controls = true,
   autoPlay = false,
   muted = false,
   loop = false,
   playsInline = false,
+  skeletonClassName = "",
   ...restProps
 }: Props) => {
   const { src, alt }: Media = item;
@@ -57,7 +62,7 @@ const SmartMedia = ({
   if (mime === MimeTypes.VIDEO) {
     if (type === MediaTypes.INTERNAL) {
       return (
-        <video
+        <BaseVideo
           className={`media ${className}`}
           src={getMediaPath(url)}
           controls={controls}
@@ -65,6 +70,7 @@ const SmartMedia = ({
           loop={loop}
           muted={muted}
           playsInline={playsInline}
+          skeletonClassName={skeletonClassName}
         />
       );
     } else if (type === MediaTypes.EXTERNAL) {
@@ -84,10 +90,11 @@ const SmartMedia = ({
   } else if (mime === MimeTypes.IMAGE) {
     const isInternal = type === MediaTypes.INTERNAL;
     return (
-      <img
+      <BaseImage
         className={`media ${className}`}
         src={isInternal ? getMediaPath(url) : url}
         alt={alt ?? ""}
+        skeletonClassName={skeletonClassName}
       />
     );
   }

@@ -63,6 +63,7 @@
     }
     .radio-text {
       margin-inline-start: rem(5);
+      @include input-text();
     }
   }
 }

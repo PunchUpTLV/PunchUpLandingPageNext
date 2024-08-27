@@ -4,6 +4,8 @@ import styles from "./AnimatedTextArea.module.scss";
 import AnimatedPlaceholder from "components/Basic/AnimatedPlaceholder/AnimatedPlaceholder";
 import BasicTextArea from "components/Basic/BasicTextArea/BasicTextArea";
 import BasicInputErrrorMsg from "components/Basic/BasicInputErrrorMsg/BasicInputErrrorMsg";
+import { generateUniqueId } from "utils/functions";
+import useInputAccessibility from "utils/hooks/useInputAccessibility";
 
 type Props = {
   value: string | number;
@@ -20,13 +22,17 @@ type Props = {
   rows?: number;
   showError?: boolean;
   errorMessage?: string;
+  ariaLabel?: string;
+  required?: boolean;
 };
+
+const defaultId = generateUniqueId(16);
 
 function AnimateTextArea(props: Props) {
   const {
     value,
     onChange,
-    id = "",
+    id = defaultId,
     name = "",
     placeholder = "",
     disabled = false,
@@ -36,7 +42,17 @@ function AnimateTextArea(props: Props) {
     showError = false,
     errorMessage = "",
     rows = 1,
+    ariaLabel = "",
+    required = false,
   } = props;
+
+  const accessibilityProps = useInputAccessibility({
+    ariaLabel,
+    showError,
+    required,
+    placeholder,
+    name,
+  });
 
   const [isFocus, setIsFocus] = useState(false);
 
@@ -62,6 +78,7 @@ function AnimateTextArea(props: Props) {
         onBlur={onBlurHandler}
         disabled={disabled}
         rows={rows}
+        {...accessibilityProps}
       />
       <AnimatedPlaceholder
         id={id}

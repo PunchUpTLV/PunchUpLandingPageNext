@@ -27,7 +27,7 @@ function MetaTagsInputsSelect(props: Props) {
     valueArray = [],
     setFieldValue,
   } = props;
-  const item = valueArray.find((i) => i.meta_tag_id === id) ?? {
+  const item = valueArray.find((i) => i.metaTagId === id) ?? {
     type: "",
     id: "",
     value: "",

@@ -1,19 +1,16 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-
-import burger from "/public/assets/icons/burger.svg";
-
-import Actions from "redux-store/actions";
 
 import styles from "./cmsheader.module.scss";
 import BurgerIcon from "../BurgerIcon/BurgerIcon";
+import { setBurger } from "redux-store/features/burgerStateSlice";
+import { useAppDispatch, useAppSelector } from "utils/hooks/useRedux";
 
 export default function CMSHeader() {
-  const dispatch = useDispatch();
-  const isBurgerOpen = useSelector((store) => store.burgerState);
+  const dispatch = useAppDispatch();
+  const isBurgerOpen = useAppSelector((store) => store.burgerState);
 
   const handleBurgerClick = () => {
-    dispatch(Actions.setBurger(true));
+    dispatch(setBurger(true));
   };
 
   return (

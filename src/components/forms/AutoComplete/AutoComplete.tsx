@@ -2,16 +2,16 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
-import basic from "./AutoComplete.module.scss";
+import styles from "./AutoComplete.module.scss";
 import { useOutsideClick } from "utils/hooks/useOutsideClick";
 import TextInput from "../TextInput/TextInput";
 import { inputEvent } from "utils/types/inputs";
 import BasicInputErrrorMsg from "components/Basic/BasicInputErrrorMsg/BasicInputErrrorMsg";
 import OptionsList from "components/Basic/OptionsList/OptionsList";
 import useHighlightedItem from "utils/hooks/useHighlightedItem";
+import { clsx } from "utils/functions";
 
 type Props = {
-  extraStyles?: any;
   options: Array<any>;
   showError?: boolean;
   errorMessage?: string;
@@ -27,7 +27,6 @@ type Props = {
 
 function AutoComplete(props: Props) {
   const {
-    extraStyles = {},
     options = [],
     showError = false,
     errorMessage = "",
@@ -52,11 +51,8 @@ function AutoComplete(props: Props) {
       query: input,
       isOpen,
       setIsOpen,
+      name,
     });
-
-  function styles(className: string) {
-    return (basic[className] || "") + " " + (extraStyles[className] || "");
-  }
 
   useEffect(() => {
     if (Array.isArray(options) && options.length > 0 && value) {
@@ -91,7 +87,7 @@ function AutoComplete(props: Props) {
 
   return (
     <div
-      className={`${styles("autocomplete-wrapper")} ${className}`}
+      className={clsx(styles["autocomplete-wrapper"], className)}
       ref={wrapperRef}
     >
       <TextInput

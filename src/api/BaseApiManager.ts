@@ -1,34 +1,28 @@
-import Actions from "redux-store/actions";
-import store from "../redux-store/index";
 import POPUP_TYPES from "constants/popup-types";
+import Store from "redux-store";
+import { addPopup } from "redux-store/features/popupsSlice";
+import ApiValidationService from "services/ApiValidationService";
 
 const BaseApiManager = (function () {
-  const api = {
-    baseUrl: process.env.NEXT_PUBLIC_HOST,
-    version: process.env.NEXT_PUBLIC_API_VERSION,
-    api: process.env.NEXT_PUBLIC_API,
-  };
+  function buildUrl(methodName: string, overrideUrl?: string) {
+    if (overrideUrl) {
+      return overrideUrl + "/" + methodName;
+    }
 
-  function buildeUrl(methodName: string) {
-    return api.baseUrl + "/" + api.api + "/" + api.version + "/" + methodName;
+    const api = ApiValidationService.getApiData();
+
+    return (
+      api.baseUrl + "/" + api.platform + "/" + api.version + "/" + methodName
+    );
   }
 
   function getHeaders() {
     return { "Content-Type": "application/json; charset=UTF-8" };
   }
 
-  function onReject(response: string) {
-    store.dispatch(
-      Actions.addPopup({
-        type: POPUP_TYPES.API_ERROR,
-        payload: { text: response },
-      })
-    );
-  }
-
   function onFailure(response: string) {
-    store.dispatch(
-      Actions.addPopup({
+    Store.dispatch(
+      addPopup({
         type: POPUP_TYPES.API_ERROR,
         payload: { text: response },
       })
@@ -37,9 +31,9 @@ const BaseApiManager = (function () {
 
   function onSuccess() {}
   return {
-    buildeUrl,
+    buildUrl,
     getHeaders,
-    onReject,
+
     onFailure,
     onSuccess,
   };

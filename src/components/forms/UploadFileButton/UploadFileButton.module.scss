@@ -1,5 +1,6 @@
 @import "src/styles/imports.scss";
 .file-input-wrapper {
+  position: relative;
   .media-file {
     display: none;
   }
@@ -18,6 +19,12 @@
       opacity: 0.4;
       pointer-events: none;
     }
+  }
+  .file-name-title {
+    font-size: rem(16);
+    font-family: $font-light;
+    position: absolute;
+    top: 100%;
   }
 }
 

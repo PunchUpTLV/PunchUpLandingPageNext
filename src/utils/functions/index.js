@@ -49,20 +49,12 @@ export function formatTime(time) {
   return time < 10 ? `0${time}` : time.toString();
 }
 
-export function combineClassNames(...classes) {
-  let res = "";
-  classes.forEach((cls) => {
-    res += cls ? cls + " " : "";
-  });
-  return res;
-}
-
 export function parseJWT(token) {
   const decoded = jwt_decode(token);
   return decoded;
 }
 
-export function chekcForJWTexp(token) {
+export function checkForJWTexp(token) {
   const currentTime = Math.floor(Date.now() / 1000);
   const decodedToken = parseJWT(token);
   const exp = decodedToken.exp;
@@ -86,4 +78,12 @@ export function clsx() {
   const filteredArgs = argsArray.filter((arg) => arg);
 
   return filteredArgs.join(" ");
+}
+
+export function createSortObject(objectsList) {
+  const result = objectsList.reduce((acc, obj, index) => {
+    acc[index + 1] = obj._id;
+    return acc;
+  }, {});
+  return result;
 }

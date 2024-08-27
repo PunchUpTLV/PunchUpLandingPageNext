@@ -1,15 +1,15 @@
 "use client";
 
 import NotificationsTypes from "constants/NotificationsTypes";
-import { useDispatch } from "react-redux";
-import Actions from "redux-store/actions";
+import { addNotification } from "redux-store/features/notificationsSlice";
+import { useAppDispatch } from "./useRedux";
 
 function useNotificationsHandler() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   function onSuccessNotification() {
     dispatch(
-      Actions.addNotification({
+      addNotification({
         type: NotificationsTypes.SUCCCESS,
         payload: { title: "עודכן בהצלחה", text: "המידע עודכן בהצלחה" },
       })

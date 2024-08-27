@@ -5,6 +5,7 @@ import React, { ChangeEventHandler, useEffect, useRef } from "react";
 import styles from "./AutoGrowTextArea.module.scss";
 import BasicTextArea from "components/Basic/BasicTextArea/BasicTextArea";
 import BasicInputErrrorMsg from "components/Basic/BasicInputErrrorMsg/BasicInputErrrorMsg";
+import useInputAccessibility from "utils/hooks/useInputAccessibility";
 
 type Props = {
   value: string | number;
@@ -21,6 +22,8 @@ type Props = {
   rows?: number;
   showError?: boolean;
   errorMessage?: string;
+  ariaLabel?: string;
+  required?: boolean;
 };
 
 function AutoGrowTextArea(props: Props) {
@@ -36,9 +39,19 @@ function AutoGrowTextArea(props: Props) {
     className = "",
     showError = false,
     errorMessage = "",
+    ariaLabel = "",
+    required = false,
   } = props;
 
   const textArea = useRef<HTMLTextAreaElement>(null);
+
+  const accessibilityProps = useInputAccessibility({
+    ariaLabel,
+    showError,
+    required,
+    placeholder,
+    name,
+  });
 
   useEffect(() => {
     if (textArea.current) {
@@ -61,6 +74,7 @@ function AutoGrowTextArea(props: Props) {
         onBlur={onBlur}
         onFocus={onFocus}
         value={value}
+        {...accessibilityProps}
       />
 
       <BasicInputErrrorMsg showError={showError} errorMessage={errorMessage} />

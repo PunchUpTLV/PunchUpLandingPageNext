@@ -6,21 +6,34 @@ import TABLE_CELL_TYPES from "constants/TableCellType";
 import TABLE_COLORS from "constants/TableColors";
 import POPUP_TYPES from "constants/popup-types";
 import React from "react";
-import { useSelector } from "react-redux";
 import usePopup from "utils/hooks/usePopup";
 
 import styles from "./metaTags.module.scss";
 import Api from "api/requests";
+import useDeleteItem from "utils/hooks/useDeleteItem";
+import usePermission from "utils/hooks/usePermission";
+import CMS_MODULES from "constants/CMSModules";
+import { useAppSelector } from "utils/hooks/useRedux";
 
 function MetaTags(props) {
   const openPopup = usePopup();
-  const metaTags = useSelector((store) => store.init.metaTags);
-  const languages = useSelector((store) => store.init?.languages);
+  usePermission(CMS_MODULES.META_TAGS);
 
-  function onDelete(item) {
+  const metaTags = useAppSelector((store) => store.init.metaTags);
+  const languages = useAppSelector((store) => store.init?.languages);
+  const deleteItem = useDeleteItem();
+
+  function deleteItemHandler(item) {
+    deleteItem("למחוק את תגית המטא הזאת?", callback);
+    function callback(onSuccess) {
+      onDelete(item, onSuccess);
+    }
+  }
+
+  function onDelete(item, onSuccess) {
     const id = item._id;
     const payload = { id };
-    Api.deleteMetaTags({ payload });
+    Api.deleteMetaTags({ payload, onSuccess });
   }
 
   function onUpdate(item) {
@@ -30,7 +43,7 @@ function MetaTags(props) {
   const deleteAction = {
     color: TABLE_COLORS.RED,
     text: "מחיקה",
-    onClick: onDelete,
+    onClick: deleteItemHandler,
   };
   const updateAction = {
     color: TABLE_COLORS.GREEN,
@@ -43,7 +56,7 @@ function MetaTags(props) {
       title: "נתיב",
       type: TABLE_CELL_TYPES.TEXT,
     },
-    lang_id: {
+    langId: {
       title: "שפה",
       type: TABLE_CELL_TYPES.TEXT_FROM_DATASET,
       dataset: languages,
@@ -65,8 +78,7 @@ function MetaTags(props) {
       <div className={styles["add-button-wrapper"]}>
         <CmsButton
           onClick={() => openPopup(POPUP_TYPES.META_TAGS)}
-          className="create"
-          title="יצירת עמוד חדש"
+          text="יצירת עמוד חדש"
         />
       </div>
 

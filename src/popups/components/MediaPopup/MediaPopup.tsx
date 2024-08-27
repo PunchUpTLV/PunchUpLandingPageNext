@@ -3,14 +3,12 @@
 import React, { useRef, useState } from "react";
 
 import styles from "./MediaPopup.module.scss";
-import { useDispatch } from "react-redux";
 import Switch from "components/forms/Switch/Switch";
 import AnimatedInput from "components/forms/AnimatedInput";
 import CmsButton from "components/CmsButton/CmsButton";
 import { inputEvent } from "utils/types/inputs";
 import SlidePopup from "popups/Presets/SlidePopup/SlidePopup";
 import Api from "api/requests";
-import Actions from "redux-store/actions";
 import UploadFileButton from "components/forms/UploadFileButton/UploadFileButton";
 import { SlidePopupRef } from "utils/types/popup";
 
@@ -22,7 +20,7 @@ export default function MediaPopup() {
   const [name, setName] = useState("");
   const [base64, setBase64] = useState<string | ArrayBuffer | null>("");
   const [url, setUrl] = useState("");
-  const dispatch = useDispatch();
+
   const ref = useRef<SlidePopupRef>();
 
   function onMediaChange(e: inputEvent) {
@@ -72,7 +70,6 @@ export default function MediaPopup() {
           name="url"
           onChange={onUrlChange}
           type="text"
-          extraStyles={styles}
           onBlur={onBlurUrl}
         />
 
@@ -141,10 +138,9 @@ export default function MediaPopup() {
   }
 
   function onSuccess(data) {
-    dispatch(Actions.addMedia(data));
     ref.current?.animateOut();
   }
-  function addMedia() {
+  function addMediaHandler() {
     const payload = {
       alt: alt,
       name: name,
@@ -175,11 +171,7 @@ export default function MediaPopup() {
   }
 
   return (
-    <SlidePopup
-      className={styles["media-popup"]}
-      ref={ref}
-      extraStyles={styles}
-    >
+    <SlidePopup className={styles["media-popup"]} ref={ref}>
       <div className={styles["media-container"]}>
         <div className={styles["switch-wrapper"]}>
           <div>העלאת מדיה</div>
@@ -212,23 +204,22 @@ export default function MediaPopup() {
           className={styles["input-wrapper"]}
         />
 
-        <CmsButton
-          title={"הוסף"}
-          onClick={addMedia}
-          className={"create"}
-          isDisabled={!currentMedia}
-          extraStyles={styles}
-          size
-        />
+        <div className={styles["actions"]}>
+          <CmsButton
+            text={"הוסף"}
+            onClick={addMediaHandler}
+            isDisabled={!currentMedia}
+            className={styles["button"]}
+          />
 
-        <CmsButton
-          title={"הסר מדיה"}
-          onClick={removeMedia}
-          className={"delete"}
-          extraStyles={styles}
-          isDisabled={!currentMedia}
-          size
-        />
+          <CmsButton
+            text={"הסר מדיה"}
+            onClick={removeMedia}
+            isDisabled={!currentMedia}
+            color="red"
+            className={styles["button"]}
+          />
+        </div>
       </div>
     </SlidePopup>
   );

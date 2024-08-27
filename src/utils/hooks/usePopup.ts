@@ -1,11 +1,11 @@
-import { useDispatch } from "react-redux";
-import Actions from "redux-store/actions";
+import { addPopup } from "redux-store/features/popupsSlice";
+import { useAppDispatch } from "./useRedux";
 
 function usePopup() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   function openPopup(type: string, payload?: Object, priority?: number) {
     dispatch(
-      Actions.addPopup({
+      addPopup({
         type,
         payload,
         priority,

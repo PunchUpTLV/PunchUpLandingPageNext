@@ -7,12 +7,13 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useDispatch } from "react-redux";
 
-import Actions from "redux-store/actions";
-
-import basic from "./SlidePopup.module.scss";
+import styles from "./SlidePopup.module.scss";
 import XIcon from "/public/assets/icons/close-icon.svg";
+import { clsx } from "utils/functions";
+import Scrollbar from "components/ScrollBar/Scrollbar";
+import { removePopup } from "redux-store/features/popupsSlice";
+import { useAppDispatch } from "utils/hooks/useRedux";
 
 const SlidePopupRef = (props, ref) => {
   const {
@@ -20,11 +21,12 @@ const SlidePopupRef = (props, ref) => {
     children,
     className = "",
     animateOutCallback = () => {},
-    extraStyles = {},
+    popupWrapperClassName = "",
+    popupContentClassName = "",
   } = props;
 
   const [animationClass, setAminationClass] = useState("");
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const modalRef = useRef();
   const initialY = useRef();
 
@@ -35,10 +37,6 @@ const SlidePopupRef = (props, ref) => {
   useEffect(() => {
     animateIn();
   }, []);
-
-  function styles(className) {
-    return (basic[className] || "") + " " + (extraStyles[className] || "");
-  }
 
   const completeAnimation = () => {
     if (animationClass !== "exit" && animationClass !== "done") {
@@ -60,7 +58,7 @@ const SlidePopupRef = (props, ref) => {
         callback();
       }
 
-      dispatch(Actions.removePopup());
+      dispatch(removePopup());
     }, 200);
   };
 
@@ -68,6 +66,7 @@ const SlidePopupRef = (props, ref) => {
     // Get TouchEvent ClientY
 
     const clientY = Math.round(e.changedTouches[0].clientY);
+
     initialY.current = clientY;
   }
 
@@ -90,33 +89,47 @@ const SlidePopupRef = (props, ref) => {
 
   return (
     <div
-      className={`backdrop ${styles(
-        "slide-popup"
-      )} ${className} ${animationClass} `}
+      className={clsx(
+        "backdrop",
+        styles["slide-popup"],
+        className,
+        animationClass
+      )}
       onClick={() => animateOut(animateOutCallback)}
       onTransitionEnd={completeAnimation}
     >
       <div
-        className={`${styles("popup_wrapper")} ${styles(animationClass)}`}
+        className={clsx(
+          styles["popup_wrapper"],
+          styles[animationClass],
+          popupWrapperClassName
+        )}
         onClick={(e) => e.stopPropagation()}
         ref={modalRef}
       >
         <div
-          className={styles("gesture-handler")}
+          className={styles["gesture-handler"]}
           onTouchMove={(e) => onTouchMove(e)}
           onTouchEnd={(e) => handleOnTouchRelease(e)}
           onTouchStart={(e) => handleOnTouchStart(e)}
         />
-        {showCloseIcon && (
-          <button
-            className={styles("close-icon-wrapper")}
-            onClick={() => animateOut(animateOutCallback)}
-          >
-            <img src={XIcon.src}></img>
-          </button>
-        )}
-
-        {children && <div className={styles("popup_content")}>{children}</div>}
+        <Scrollbar
+          className={styles["popup-container"]}
+          contentClassName={clsx(
+            styles["popup-content"],
+            popupContentClassName
+          )}
+        >
+          {showCloseIcon && (
+            <button
+              className={styles["close-icon-wrapper"]}
+              onClick={() => animateOut(animateOutCallback)}
+            >
+              <img src={XIcon.src}></img>
+            </button>
+          )}
+          {children}
+        </Scrollbar>
       </div>
     </div>
   );

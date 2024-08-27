@@ -4,15 +4,15 @@ import styles from "./LoginButton.module.scss";
 
 type Props = {
   onClick: () => void;
-  title: string;
+  text: string;
 };
 
 function LoginButton(props: Props) {
-  const { onClick, title } = props;
+  const { onClick, text } = props;
 
   return (
     <button className={styles["login-btn"]} onClick={onClick}>
-      {title}
+      {text}
     </button>
   );
 }

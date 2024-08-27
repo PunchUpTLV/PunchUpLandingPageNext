@@ -1,8 +1,12 @@
 export interface LinkType {
   _id: string;
   link: string;
-  link_type: string;
+  linkType: string;
   media: string;
   name: string;
-  title?: string;
+  titles?: LinkTitles;
 }
+
+type LinkTitles = {
+  [key: string]: string;
+};

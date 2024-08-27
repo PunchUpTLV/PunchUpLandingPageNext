@@ -9,10 +9,7 @@
     overflow: auto;
     height: 100%;
 
-    padding-inline-start: 10px;
     @include hideScrollbar();
-    .content {
-    }
   }
 
   .scrollbar {
@@ -21,7 +18,7 @@
 
     position: absolute;
     top: 0;
-    right: 0;
+    right: 3px;
     height: 100%;
     width: 3px;
     &.hide {

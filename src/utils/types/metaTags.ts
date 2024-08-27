@@ -1,5 +1,5 @@
 export type MetaTagRow = {
   type: string;
-  meta_tag_id: string;
+  metaTagId: string;
   value: string;
 };

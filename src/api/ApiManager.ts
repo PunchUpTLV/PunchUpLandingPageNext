@@ -1,26 +1,30 @@
 import BaseApiManager from "./BaseApiManager";
-import Actions from "redux-store/actions";
-import store from "../redux-store/index";
 import API_METHODS from "constants/ApiMethods";
 import SERVER_RESPONSES from "constants/ServerResponses";
 import axios from "axios";
 import {
+  ApiCallData,
+  apiConfig,
+  ApiProps,
   clientSettings,
   onFailureFunction,
-  onRejectFunction,
   onSuccessFunction,
 } from "utils/types/api";
+import { generateUniqueId } from "utils/functions";
+import ApiQueueService from "./ApiQueueService";
+import API_QUEUE_STATUS from "constants/ApiQueueStatus";
+import { setLoader } from "redux-store/features/loaderSlice";
+import Store from "redux-store";
 
 const ApiManager = (function () {
   function generateRequest(
     payload: any,
     headers = {},
     method = API_METHODS.POST,
-    methodName: string
+    methodName: string,
+    config?: apiConfig
   ) {
-    store.dispatch(Actions.requestStarted());
-
-    const url = BaseApiManager.buildeUrl(methodName);
+    const url = BaseApiManager.buildUrl(methodName, config?.url);
     const defaultHeaders = BaseApiManager.getHeaders();
     const allHeaders = { ...headers, ...defaultHeaders };
 
@@ -35,55 +39,83 @@ const ApiManager = (function () {
     } else {
       settings.params = payload;
     }
+
     return settings;
   }
 
-  function execute(
-    props: any,
+  function addCall(
+    props: ApiProps,
     methodType: string,
     methodName: string,
-    onSuccess: onSuccessFunction,
-    onFailure: onFailureFunction,
-    onReject: onRejectFunction
+    onSuccess?: onSuccessFunction,
+    onFailure?: onFailureFunction
   ) {
     const settings = generateRequest(
       props.payload,
       props.headers,
       methodType,
-      methodName
+      methodName,
+      props.config
     );
 
-    store.dispatch(Actions.setLoader(true));
+    const apiCallData = {
+      settings,
+      config: props.config ?? {},
+      onSuccess,
+      onFailure,
+      _id: generateUniqueId(16),
+      status: API_QUEUE_STATUS.PENDING,
+      callback: props.callback,
+    };
+    ApiQueueService.addToQueue(apiCallData);
+    return run();
+  }
 
-    return axios(settings)
+  function run() {
+    const call = ApiQueueService.execute();
+    if (call) {
+      return execute(call);
+    }
+  }
+
+  function execute(callData: ApiCallData) {
+    if (callData?.config?.showLoader ?? true) {
+      Store.dispatch(setLoader(true));
+    }
+
+    ApiQueueService.updateCallStatus(callData._id, API_QUEUE_STATUS.RUNNING);
+    return axios(callData.settings)
       .then((response) => {
-        store.dispatch(Actions.requestEnded());
-        typeof props.callback === "function" && props.callback(response);
-
-        if (response.status === 200) {
-          if (response.data.status === SERVER_RESPONSES.SUCCESS) {
-            onSuccess ? onSuccess(response.data) : BaseApiManager.onSuccess();
-          } else if (response.data.status === SERVER_RESPONSES.REJECTED) {
-            onReject
-              ? onReject(response.data)
-              : BaseApiManager.onReject(response.data);
-          }
+        typeof callData.callback === "function" && callData.callback(response);
+        if (
+          response.status === 200 &&
+          response.data.status === SERVER_RESPONSES.SUCCESS
+        ) {
+          callData.onSuccess
+            ? callData.onSuccess(response.data)
+            : BaseApiManager.onSuccess();
         }
-        store.dispatch(Actions.setLoader(false));
+
+        Store.dispatch(setLoader(false));
         return response.data;
       })
       .catch((error) => {
-        store.dispatch(Actions.requestEnded());
+        typeof callData.callback === "function" && callData.callback(error);
 
         BaseApiManager.onFailure(
           error?.response?.data?.message ?? error.message
         );
-        typeof onFailure === "function" && onFailure(error.data.message);
-        store.dispatch(Actions.setLoader(false));
+        typeof callData.onFailure === "function" &&
+          callData.onFailure(error.data.message);
+        Store.dispatch(setLoader(false));
+      })
+      .finally(() => {
+        ApiQueueService.removeCallFromQueue(callData._id);
+        return run();
       });
   }
   return {
-    execute,
+    addCall,
   };
 })();
 

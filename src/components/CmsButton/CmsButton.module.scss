@@ -1,21 +1,15 @@
 @import "src/styles/imports.scss";
 .button {
   font-size: rem(16);
-  padding: rem(6) rem(15);
-  &.size {
-    width: rem(100);
-    height: rem(30);
-  }
+  padding: rem(5) rem(20);
+  background-color: $cms-main-color;
+  border-radius: rem(55);
+  color: white;
+  font-family: $font;
 
-  &.create {
-    @include cmsButtonBlue;
-  }
-  &.delete {
-    @include cmsButtonRed;
-  }
-  &.update {
-    @include cmsButtonGreen;
-  }
+  position: relative;
+  overflow: hidden;
+
   &.disabled {
     opacity: 0.4;
     pointer-events: none;
@@ -31,10 +25,22 @@
 
 @media (min-width: em($desktop)) {
   .button {
-    font-size: rem(20);
-    &.size {
-      width: rem(170);
-      height: rem(35);
-    }
+    font-size: rem(18);
+  }
+}
+
+.ripple-creator {
+  &.ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple 600ms linear;
+    background-color: rgba(255, 255, 255, 0.7);
+  }
+}
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
   }
 }

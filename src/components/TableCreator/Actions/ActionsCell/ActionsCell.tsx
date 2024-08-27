@@ -8,17 +8,15 @@ import { TableAction } from "utils/types/table";
 type Props = {
   data: Object;
   actions: Array<TableAction>;
-  index: number;
 };
 
-function ActionsCell({ actions, data, index = 0 }: Props) {
+function ActionsCell({ actions, data }: Props) {
   return actions.map((action, actionIndex) => {
     return (
       <RenderCell
         action={action}
         key={"action-cell-" + actionIndex}
         data={data}
-        index={index}
       />
     );
   });
@@ -29,14 +27,13 @@ export default ActionsCell;
 type CellProps = {
   action: TableAction;
   data: Object;
-  index: number;
 };
 
-function RenderCell({ action, data, index }: CellProps) {
+function RenderCell({ action, data }: CellProps) {
   const { text = "", icon = "", onClick, color = "" } = action;
 
   function onClickHandler() {
-    typeof onClick === "function" && onClick(data, index);
+    typeof onClick === "function" && onClick(data);
   }
 
   const hasText = !!text;

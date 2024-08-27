@@ -1,10 +1,14 @@
+const createNextIntlPlugin = require("next-intl/plugin");
+
+const withNextIntl = createNextIntlPlugin();
+
 /** @type {import('next').NextConfig} */
 
 const { version } = require("./package.json");
 
 const nextConfig = {
   reactStrictMode: false,
-  publicRuntimeConfig: {
+  env: {
     version,
   },
   webpack: (config) => {
@@ -14,4 +18,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = withNextIntl(nextConfig);

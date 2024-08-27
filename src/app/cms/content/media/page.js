@@ -1,20 +1,24 @@
 "use client";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 
 import Api from "api/requests";
 
 import styles from "./media.module.scss";
 
 import TrashBin from "/public/assets/icons/trash.svg";
-import { combineClassNames } from "../../../../utils/functions";
+import { clsx } from "../../../../utils/functions";
 import TextInput from "../../../../components/forms/TextInput/TextInput";
 import SmartMedia from "../../../../components/SmartMedia/SmartMedia";
 import usePopup from "utils/hooks/usePopup";
 import POPUP_TYPES from "constants/popup-types";
 import CmsButton from "components/CmsButton/CmsButton";
+import usePermission from "utils/hooks/usePermission";
+import CMS_MODULES from "constants/CMSModules";
+import { useAppSelector } from "utils/hooks/useRedux";
 export default function MediaPage() {
-  const medias = useSelector((store) => store.init?.media);
+  const medias = useAppSelector((store) => store.init?.media);
+  usePermission(CMS_MODULES.MEDIA);
+
   const [query, setQuery] = useState("");
 
   const onQueryChange = (e) => {
@@ -43,8 +47,7 @@ export default function MediaPage() {
           className={styles["search-box"]}
         />
         <CmsButton
-          title={"הוספת מדיה חדשה"}
-          className="create"
+          text={"הוספת מדיה חדשה"}
           onClick={() => openPopup(POPUP_TYPES.MEDIA)}
         />
       </div>
@@ -77,8 +80,12 @@ function MediaBox(props) {
   };
 
   return (
-    <div className={combineClassNames(styles["media-container"], className)}>
-      <SmartMedia className={styles["media"]} item={props} />
+    <div className={clsx(styles["media-container"], className)}>
+      <SmartMedia
+        className={styles["media"]}
+        item={props}
+        skeletonClassName={styles["media-wrapper"]}
+      />
       <div className={styles["media-container-footer"]}>
         <div className={styles["media-name"]}>{name}</div>
         <button className={styles["media-delete"]} onClick={onRemoveClick}>

@@ -1,38 +1,27 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-
-import basic from "./Scrollbar.module.scss";
+import styles from "./Scrollbar.module.scss";
+import { clsx } from "utils/functions";
+import useResizeObserver from "utils/hooks/useResizeObserver";
 
 type Props = {
-  extraStyles?: any;
   children: React.ReactElement;
   className?: string;
+  contentClassName?: string;
 };
 
-function Scrollbar({ extraStyles = {}, children, className = "" }: Props) {
+function Scrollbar({ children, className = "", contentClassName = "" }: Props) {
   const trackRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
   const contentContainerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  useResizeObserver(contentRef, measureContent);
+  useResizeObserver(contentContainerRef, measureContent);
 
   const [shouldHideScrollbar, setShouldHideScrollbar] = useState(false);
-
-  function styles(className: string) {
-    return (basic[className] || "") + " " + (extraStyles[className] || "");
-  }
 
   useEffect(() => {
     measureContent();
   }, []);
-
-  useEffect(() => {
-    const ro = new ResizeObserver(() => {
-      measureContent();
-    });
-
-    if (contentRef.current) {
-      ro.observe(contentRef.current);
-    }
-  }, [contentRef.current]);
 
   const handleScrollContent = () => {
     const thumbEle = thumbRef.current;
@@ -45,7 +34,7 @@ function Scrollbar({ extraStyles = {}, children, className = "" }: Props) {
     }%`;
   };
 
-  const handleClickTrack = (e) => {
+  const handleClickTrack = (e: MouseEvent) => {
     const trackEle = trackRef.current;
     const contentEle = contentContainerRef.current;
     if (!trackEle || !contentEle) {
@@ -66,14 +55,13 @@ function Scrollbar({ extraStyles = {}, children, className = "" }: Props) {
     const scrollRatio = contentEle.clientHeight / contentEle.scrollHeight;
     if (scrollRatio < 1) {
       setShouldHideScrollbar(false);
-
       thumbEle.style.height = `${scrollRatio * 100}%`;
     } else {
       setShouldHideScrollbar(true);
     }
   }
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+  const handleMouseDown = useCallback((e: MouseEvent) => {
     const ele = thumbRef.current;
     const contentEle = contentContainerRef.current;
     if (!ele || !contentEle) {
@@ -85,8 +73,7 @@ function Scrollbar({ extraStyles = {}, children, className = "" }: Props) {
       y: e.clientY,
     };
 
-    const handleMouseMove = (e: React.MouseEvent | any) => {
-      const dx = e.clientX - startPos.x;
+    const handleMouseMove = (e: MouseEvent) => {
       const dy = e.clientY - startPos.y;
       const scrollRatio = contentEle.clientHeight / contentEle.scrollHeight;
       contentEle.scrollTop = startPos.top + dy / scrollRatio;
@@ -103,7 +90,7 @@ function Scrollbar({ extraStyles = {}, children, className = "" }: Props) {
     document.addEventListener("mouseup", handleMouseUp);
   }, []);
 
-  const handleTouchStart = React.useCallback((e: React.TouchEvent) => {
+  const handleTouchStart = useCallback((e: TouchEvent) => {
     const ele = thumbRef.current;
     const contentEle = contentContainerRef.current;
     if (!ele || !contentEle) {
@@ -116,9 +103,8 @@ function Scrollbar({ extraStyles = {}, children, className = "" }: Props) {
       y: touch.clientY,
     };
 
-    const handleTouchMove = (e: React.TouchEvent | any) => {
+    const handleTouchMove = (e: TouchEvent) => {
       const touch = e.touches[0];
-      const dx = touch.clientX - startPos.x;
       const dy = touch.clientY - startPos.y;
       const scrollRatio = contentEle.clientHeight / contentEle.scrollHeight;
       contentEle.scrollTop = startPos.top + dy / scrollRatio;
@@ -137,7 +123,6 @@ function Scrollbar({ extraStyles = {}, children, className = "" }: Props) {
 
   const updateCursor = (ele: HTMLDivElement) => {
     ele.style.userSelect = "none";
-
     document.body.style.userSelect = "none";
   };
 
@@ -147,10 +132,9 @@ function Scrollbar({ extraStyles = {}, children, className = "" }: Props) {
   };
 
   return (
-    <div className={`${styles("wrapper")} ${className}`}>
+    <div className={clsx(styles["wrapper"], className)}>
       <div
-        id={"test"}
-        className={styles("container-content")}
+        className={clsx(styles["container-content"], contentClassName)}
         ref={contentContainerRef}
         onScroll={handleScrollContent}
       >
@@ -158,20 +142,21 @@ function Scrollbar({ extraStyles = {}, children, className = "" }: Props) {
       </div>
 
       <div
-        className={`${styles("scrollbar")} ${
-          shouldHideScrollbar ? styles("hide") : ""
-        }`}
+        className={clsx(
+          styles["scrollbar"],
+          shouldHideScrollbar ? styles["hide"] : ""
+        )}
       >
         <div
-          className={styles("scrollbar-track")}
+          className={styles["scrollbar-track"]}
           ref={trackRef}
-          onClick={handleClickTrack}
+          onClick={(e) => handleClickTrack(e.nativeEvent)}
         />
         <div
-          className={styles("scrollbar-thumb")}
+          className={styles["scrollbar-thumb"]}
           ref={thumbRef}
-          onMouseDown={handleMouseDown}
-          onTouchStart={handleTouchStart}
+          onMouseDown={(e) => handleMouseDown(e.nativeEvent)}
+          onTouchStart={(e) => handleTouchStart(e.nativeEvent)}
         />
       </div>
     </div>
