@@ -448,6 +448,12 @@ const Api = (function () {
       onSuccess
     );
   }
+  async function sendLead(props: ApiProps = {}) {
+    function onSuccess(res: ApiResponse) {
+      typeof props.onSuccess === "function" && props.onSuccess(res.body);
+    }
+    return ApiManager.addCall(props, API_METHODS.POST, "lead", onSuccess);
+  }
 
   async function test(props: ApiProps = {}) {
     function onSuccess(res: ApiResponse) {
@@ -493,6 +499,7 @@ const Api = (function () {
     addIngredientsMenu,
     updateIngredientsMenu,
     deleteIngredientsMenu,
+    sendLead,
     test,
   };
 })();

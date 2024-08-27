@@ -9,11 +9,16 @@ import FormCreator from "components/FormCreator/FormCreator";
 import RedButton from "components/RedButton/RedButton";
 import AppText from "components/AppText/AppText";
 import useTranslate from "utils/hooks/useTranslate";
+import Api from "api/requests";
+import usePopup from "utils/hooks/usePopup";
+import POPUP_TYPES from "constants/popup-types";
 
 type Props = {};
 
 function Form(props: Props) {
   const translate = useTranslate();
+  const openPopup = usePopup();
+
   const formData: FormDataType = {
     inputs: [
       {
@@ -32,7 +37,15 @@ function Form(props: Props) {
     ],
   };
 
-  function onSubmit() {}
+  function onSubmit(payload: any) {
+    Api.sendLead({ payload, onSuccess });
+
+    function onSuccess() {
+      openPopup(POPUP_TYPES.LEAD_SENT_SUCCESS, {
+        name: payload.fullname,
+      });
+    }
+  }
 
   return (
     <section id="lead-form" className={styles["form-wrapper"]}>

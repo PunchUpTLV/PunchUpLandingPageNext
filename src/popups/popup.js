@@ -24,6 +24,7 @@ import ItemsMenuPopup from "./components/ItemsMenuPopup/ItemsMenuPopup";
 import ItemIngredientsPopup from "./components/ItemIngredientsPopup/ItemIngredientsPopup";
 import { useAppSelector } from "utils/hooks/useRedux";
 import ProductPopup from "./components/ProductPopup/ProductPopup";
+import LeadSentSuccess from "./components/LeadSentSuccess/LeadSentSuccess";
 
 export default function Popups({ className = "" }) {
   const popupsArray = useAppSelector((store) => store.popupsArray);
@@ -83,6 +84,9 @@ export default function Popups({ className = "" }) {
         <ItemIngredientsPopup key={key} payload={payload} />
       ),
       [POPUP_TYPES.PRODUCT]: <ProductPopup key={key} payload={payload} />,
+      [POPUP_TYPES.LEAD_SENT_SUCCESS]: (
+        <LeadSentSuccess key={key} payload={payload} />
+      ),
     };
 
     const popupToReturn =
